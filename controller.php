@@ -8,8 +8,12 @@
         $username = $_POST["username"];
         $password = $_POST["password"];
         $query = "SELECT * FROM USERS where username = '$username' and password = '$password'";
-        $result = $db->query($query);
 
+        $res = $db->prepare("SELECT * FROM USERS where username = ? and password = ?");
+        $res->bind_param("ss", $username, $password);
+        $res->execute();
+        $result = $res->get_result();
+        
         if($result->num_rows == 1){
             $row = $result->fetch_object();
             $_SESSION["isLogin"] = true;
